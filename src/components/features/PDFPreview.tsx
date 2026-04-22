@@ -23,11 +23,16 @@ export function PDFPreview({ report, onClose }: Props) {
     const element = reportRef.current;
     
     const opt = {
-      margin: 0, // We handle internal padding via CSS for pixel perfection
+      margin: 0,
       filename: `${companyName?.replace(/\s+/g, '-').toLowerCase() || 'UNiBUD'}-Report.pdf`,
       image: { type: 'jpeg' as const, quality: 0.98 },
       html2canvas: { scale: 2, useCORS: true, letterRendering: true },
-      jsPDF: { unit: 'px' as const, format: [794, 1123], orientation: 'portrait' as const },
+      // FIX: Added 'as [number, number]' to satisfy strict TypeScript requirements
+      jsPDF: { 
+        unit: 'px' as const, 
+        format: [794, 1123] as [number, number], 
+        orientation: 'portrait' as const 
+      },
       pagebreak: { mode: ['css', 'legacy'] }
     };
 
@@ -48,7 +53,11 @@ export function PDFPreview({ report, onClose }: Props) {
         <div className="flex justify-between items-center mb-4 sticky top-0 z-50 bg-black/40 backdrop-blur-xl p-4 rounded-xl border border-white/10 mx-4">
           <span className="text-unibud-gold text-[12px] tracking-[0.2em] font-bold">A4 PAGINATED PREVIEW</span>
           <div className="flex gap-2">
-            <button onClick={handleDownload} disabled={isGenerating} className="bg-unibud-gold text-black rounded px-4 py-2 text-[12px] font-bold hover:bg-yellow-500 transition-all disabled:opacity-50">
+            <button 
+              onClick={handleDownload} 
+              disabled={isGenerating} 
+              className="bg-unibud-gold text-black rounded px-4 py-2 text-[12px] font-bold hover:bg-yellow-500 transition-all disabled:opacity-50"
+            >
               {isGenerating ? 'Compiling...' : 'Download PDF'}
             </button>
             <button onClick={onClose} className="bg-white/10 text-white rounded px-4 py-2 text-[12px] hover:bg-white/20 transition-all">✕</button>
@@ -100,7 +109,6 @@ export function PDFPreview({ report, onClose }: Props) {
               className="p-16 relative flex flex-col break-after-page"
               style={{ height: '1123px' }}
             >
-              {/* Header: Snapped to top of page */}
               <div className="flex justify-between items-end border-b-2 pb-6 mb-8" style={{ borderColor: `${accentColor}33` }}>
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
@@ -118,7 +126,6 @@ export function PDFPreview({ report, onClose }: Props) {
                 </div>
               </div>
 
-              {/* Photos Gallery: Scaled to fit current page height */}
               {prop.images.length > 0 && (
                 <div className="grid grid-cols-2 gap-4 mb-8">
                   {prop.images.slice(0, 4).map((img, i) => (
@@ -129,7 +136,6 @@ export function PDFPreview({ report, onClose }: Props) {
                 </div>
               )}
 
-              {/* Analysis Content */}
               <div className="flex-1">
                 {prop.comments && (
                   <div className="mb-8 p-6 rounded-lg italic text-gray-700 leading-relaxed border-l-4" style={{ backgroundColor: `${accentColor}08`, borderLeftColor: accentColor }}>
@@ -153,7 +159,6 @@ export function PDFPreview({ report, onClose }: Props) {
                 </div>
               </div>
 
-              {/* Page Footer: Snapped to bottom of page */}
               <div className="mt-auto pt-6 border-t border-gray-100 flex justify-between items-center text-[10px] font-sans text-gray-300 uppercase tracking-widest">
                 <div>{companyName} • Confidential Evaluation</div>
                 <div>Page {idx + 2} of {properties.length + 1}</div>

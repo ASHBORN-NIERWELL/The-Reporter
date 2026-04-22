@@ -27,7 +27,6 @@ export function PDFPreview({ report, onClose }: Props) {
       filename: `${companyName?.replace(/\s+/g, '-').toLowerCase() || 'UNiBUD'}-Report.pdf`,
       image: { type: 'jpeg' as const, quality: 0.98 },
       html2canvas: { scale: 2, useCORS: true, letterRendering: true },
-      // FIX: Added 'as [number, number]' to satisfy strict TypeScript requirements
       jsPDF: { 
         unit: 'px' as const, 
         format: [794, 1123] as [number, number], 
@@ -67,9 +66,9 @@ export function PDFPreview({ report, onClose }: Props) {
         {/* PDF Document Container */}
         <div ref={reportRef} className="bg-white text-[#1A1A1A] font-serif w-[794px]">
           
-          {/* PAGE 1: DEDICATED COVER PAGE */}
+          {/* PAGE 1: DEDICATED COVER PAGE - Removed break-after-page */}
           <div 
-            className="relative flex flex-col justify-between p-20 break-after-page overflow-hidden"
+            className="relative flex flex-col justify-between p-20 overflow-hidden"
             style={{ height: '1123px', borderBottom: `20px solid ${accentColor}` }}
           >
             {coverImg && (
@@ -102,11 +101,11 @@ export function PDFPreview({ report, onClose }: Props) {
             </div>
           </div>
 
-          {/* SUBSEQUENT PAGES: PROPERTIES */}
+          {/* SUBSEQUENT PAGES: PROPERTIES - Removed break-after-page */}
           {properties.map((prop, idx) => (
             <div 
               key={prop.id} 
-              className="p-16 relative flex flex-col break-after-page"
+              className="p-16 relative flex flex-col overflow-y-hidden"
               style={{ height: '1123px' }}
             >
               <div className="flex justify-between items-end border-b-2 pb-6 mb-8" style={{ borderColor: `${accentColor}33` }}>

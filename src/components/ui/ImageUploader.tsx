@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import type { PropertyImage } from "/../types";
+import type { PropertyImage } from '../../types';
 
 interface Props {
   images: PropertyImage[];

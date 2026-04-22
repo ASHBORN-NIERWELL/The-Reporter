@@ -1,4 +1,4 @@
-import { Document, Packer, Paragraph, TextRun, ImageRun, HeadingLevel, AlignmentType } from 'docx';
+import { Document, Packer, Paragraph, ImageRun, HeadingLevel, AlignmentType } from 'docx';
 import { saveAs } from 'file-saver';
 import type { EvalReport } from '../types';
 
@@ -99,13 +99,17 @@ export const generateDocx = async (report: EvalReport) => {
       
       prop.images.forEach(img => {
         try {
+          // Detect image extension to keep the DOCX compiler happy
+          const isPng = img.base64.toLowerCase().includes('image/png');
+          
           propChildren.push(
             new Paragraph({
               children: [
                 new ImageRun({
                   data: base64ToArrayBuffer(img.base64),
                   transformation: { width: 500, height: 375 }, // Standard 4:3 fit for Word
-                }),
+                  type: isPng ? 'png' : 'jpeg'
+                } as any),
               ],
               alignment: AlignmentType.CENTER,
               spacing: { after: 300 }
